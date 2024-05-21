@@ -151,6 +151,12 @@ require("lazy").setup({
 	"tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
 	"github/copilot.vim",
 	{
+		"windwp/nvim-autopairs",
+		config = function()
+			require("nvim-autopairs").setup({})
+		end,
+	},
+	{
 		"nvim-tree/nvim-tree.lua",
 		requires = "nvim-tree/nvim-web-devicons",
 		config = function()
