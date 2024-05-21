@@ -9,6 +9,7 @@ require("lazy").setup({
 	-- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
 	"tpope/vim-sleuth",
 	"github/copilot.vim",
+	{ import = "nando.plugins.harpoon" },
 	{ import = "nando.plugins.autopairs" },
 	{ import = "nando.plugins.gitsigns" },
 	{ "numToStr/Comment.nvim", opts = {} },
