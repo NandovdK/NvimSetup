@@ -5,9 +5,7 @@ return {
 		{ "williamboman/mason.nvim", config = true }, -- NOTE: Must be loaded before dependants
 		"williamboman/mason-lspconfig.nvim",
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
-
-		-- Useful status updates for LSP.
-		-- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
+		"jose-elias-alvarez/null-ls.nvim",
 		{ "j-hui/fidget.nvim", opts = {} },
 		{ "folke/neodev.nvim", opts = {} },
 	},
@@ -75,7 +73,21 @@ return {
 		capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
 		local servers = {
-			pylsp = {},
+			pylsp = {
+				settings = {
+					pylsp = {
+						plugins = {
+							pydocstyle = { enabled = false },
+							pyflakes = { enabled = false },
+							pycodestyle = { enabled = true, maxLineLength = 88 },
+							pyright = { enabled = false },
+							yapf = { enabled = false },
+							autopep8 = { enabled = false },
+							black = { enabled = true },
+						},
+					},
+				},
+			},
 			docker_compose_language_service = {},
 			terraformls = {},
 			gopls = {},
@@ -96,7 +108,7 @@ return {
 		local ensure_installed = vim.tbl_keys(servers or {})
 		vim.list_extend(ensure_installed, {
 			"stylua",
-			"autopep8",
+			"black",
 		})
 		require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
@@ -109,5 +121,22 @@ return {
 				end,
 			},
 		})
+		local null = require("null-ls")
+		null.setup({
+			sources = {
+				null.builtins.formatting.black.with({
+					extra_args = {
+						"--line-length=88",
+					},
+				}),
+			},
+		})
+
+		vim.cmd([[
+		    augroup FormatAutogroup
+			autocmd!
+			autocmd BufWritePost *.py lua vim.lsp.buf.format({ async = true })
+		    augroup END
+		]])
 	end,
 }
