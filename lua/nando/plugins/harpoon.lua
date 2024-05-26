@@ -56,5 +56,12 @@ return {
 			end,
 			desc = "harpoon to file 5",
 		},
+		{
+			"<leader>ch",
+			function()
+				require("harpoon"):list():clear()
+			end,
+			desc = "harpoon clear",
+		},
 	},
 }
